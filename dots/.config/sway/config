@@ -1,0 +1,250 @@
+# Default config for sway
+#
+# Copy to ~/.config/sway/config
+# Validate with: sway -C -c ~/.config/sway/config
+
+### Variables
+
+set $mod Mod4
+set $left h
+set $down j
+set $up k
+set $right l
+set $term alacritty
+set $menu wmenu-run
+
+# Noctalia IPC
+set $ipc noctalia msg
+
+### Output configuration
+
+output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+
+### Idle configuration
+#
+# Uncomment to enable automatic locking and display power management.
+#
+# exec swayidle -w \
+#     timeout 300 'swaylock -f -c 000000' \
+#     timeout 600 'swaymsg "output * power off"' \
+#         resume 'swaymsg "output * power on"' \
+#     before-sleep 'swaylock -f -c 000000'
+
+### Input configuration
+#
+# Example touchpad configuration:
+#
+# input type:touchpad {
+#     dwt enabled
+#     tap enabled
+#     natural_scroll enabled
+#     middle_emulation enabled
+# }
+
+### Key bindings
+
+input type:keyboard {
+       xkb_layout "us,ru"
+       xkb_options "grp:alt_shift_toggle"
+}
+
+# Start terminal
+bindsym $mod+Return exec $term
+
+# Kill focused window
+bindsym $mod+Shift+q kill
+
+# Application launcher
+bindsym $mod+d exec $menu
+
+# Floating window mouse controls
+floating_modifier $mod normal
+
+# Reload configuration
+bindsym $mod+Shift+c reload
+
+# Exit Sway with confirmation
+bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+
+### Moving around
+
+# Focus containers with home-row keys
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+
+# Focus containers with arrow keys
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# Move containers with home-row keys
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+# Move containers with arrow keys
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+### Workspaces
+
+# Switch to workspace
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+
+# Move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
+
+### Layout
+
+# Split containers
+bindsym $mod+b splith
+bindsym $mod+v splitv
+
+# Layout styles
+bindsym $mod+Shift+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# Fullscreen
+bindsym $mod+f fullscreen
+
+# Toggle tiling/floating
+bindsym $mod+Shift+space floating toggle
+
+# Focus parent container
+bindsym $mod+a focus parent
+
+
+### Scratchpad
+
+# Move focused container to scratchpad
+bindsym $mod+Shift+minus move scratchpad
+
+# Show or hide scratchpad window
+bindsym $mod+minus scratchpad show
+
+### Resize mode
+
+mode "resize" {
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+bindsym --whole-window button2 kill
+
+### Noctalia controls
+
+# Nord Red window accents
+client.focused          #4c566a #4c566a #4c566a #4c566a #4c566a
+client.focused_inactive #434C5E #3B4252 #D8DEE9 #434C5E #3B4252
+client.unfocused        #434C5E #2E3440 #D8DEE9 #434C5E #2E3440
+client.urgent           #BF616A #BF616A #ECEFF4 #BF616A #BF616A
+
+# Launcher
+bindsym $mod+space exec $ipc panel-toggle launcher
+
+# Control center
+bindsym $mod+s exec $ipc panel-toggle control-center
+
+# Settings
+bindsym $mod+comma exec $ipc settings-toggle
+
+#screen capture
+bindcode $mod+Shift+33 exec noctalia msg screenshot-region  # KEYCODE 33 = p
+
+# Start recording entire focused output (screen) - KEYCODE 27 = r
+bindcode $mod+Shift+27 exec ~/.config/wf-recorder/record-bg.sh
+# Stop recording - KEYCODE 28 = t
+bindcode $mod+Shift+28 exec pkill -INT wf-recorder
+
+### Volume and media keys
+
+# Use Noctalia for volume controls
+bindsym --locked XF86AudioMute exec $ipc volume-mute
+bindsym --locked XF86AudioLowerVolume exec $ipc volume-down
+bindsym --locked XF86AudioRaiseVolume exec $ipc volume-up
+
+# Microphone mute
+bindsym --locked XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+# Media playback
+bindsym --locked XF86AudioPlay exec playerctl play-pause
+bindsym --locked XF86AudioPause exec playerctl play-pause
+bindsym --locked XF86AudioPrev exec playerctl previous
+bindsym --locked XF86AudioNext exec playerctl next
+bindsym --locked XF86AudioStop exec playerctl stop
+
+### Brightness keys
+
+# Use Noctalia for brightness controls
+bindsym --locked XF86MonBrightnessDown exec $ipc brightness-down
+bindsym --locked XF86MonBrightnessUp exec $ipc brightness-up
+
+### Screenshot
+
+### Startup
+
+#default_border pixel 2
+#default_floating_border pixel 2
+default_border none
+default_floating_border none
+gaps inner 10
+gaps outer 10
+
+exec openrc -U gui
+# Start Noctalia
+exec noctalia
+
+for_window [app_id="firefox" title="^Picture-in-Picture$"] floating enable, sticky enable, border none
+for_window [title="Virtual Machine Manager"] floating enable
+for_window [title="File Operation Progress"] floating enable
+for_window [title="Media viewer"] floating enable
+for_window [class="vlc"] floating enable
+for_window [app_id="pavucontrol"] floating enable
+for_window [app_id="ristretto"] floating enable
+for_window [app_id="mpv"] floating enable
+for_window [app_id="blueman-manager"] floating enable
+for_window [app_id="blueman-sendto"] floating enable
+for_window [app_id="iwgtk"] floating enable
+
+#for_window [app_id=".*"] floating enable
+#for_window [class=".*"] floating enable
+
+### Additional system configuration
+include /etc/sway/config.d/*

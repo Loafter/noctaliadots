@@ -1,0 +1,291 @@
+# Default config for sway
+#
+# Copy this to ~/.config/sway/config and edit it to your liking.
+#
+# Read `man 5 sway` for a complete reference.
+
+### Variables
+#
+# Logo key. Use Mod1 for Alt.
+set $mod Mod4
+# Home row direction keys - Now using keycodes
+set $left 43  # KEYCODE 43 = h (physical key)
+set $down 44  # KEYCODE 44 = j (physical key)
+set $up 45    # KEYCODE 45 = k (physical key)
+set $right 46 # KEYCODE 46 = l (physical key)
+# Your preferred terminal emulator
+set $term alacritty
+# Your preferred application launcher
+set $menu ~/.config/rofi/launchers/misc/launcher.sh
+
+
+# Nord colors
+set $nord0 #2E3440
+set $nord1 #3B4252
+set $nord2 #434C5E
+set $nord3 #4C566A
+set $nord4 #D8DEE9
+set $nord5 #E5E9F0
+set $nord6 #ECEFF4
+set $nord7 #8FBCBB
+set $nord8 #88C0D0
+set $nord9 #81A1C1
+set $nord10 #4c566a
+set $nord11 #BF616A
+set $nord12 #D08770
+set $nord13 #EBCB8B
+set $nord14 #A3BE8C
+set $nord15 #B48EAD
+
+# Gaps configuration
+gaps inner 10
+gaps outer 10
+# Window colors with Nord theme
+client.focused $nord10 $nord10 $nord6 $nord9 $nord10
+client.focused_inactive $nord1 $nord1 $nord4 $nord3 $nord1
+client.unfocused $nord1 $nord0 $nord4 $nord1 $nord1
+client.urgent $nord11 $nord11 $nord6 $nord11 $nord11
+client.placeholder $nord0 $nord0 $nord4 $nord0 $nord0
+
+# Font (Nord-compatible)
+font pango:Fira Code 10
+
+#More specific color definitions
+#                      border    background text      indicator  child_border
+client.focused          $nord10   $nord10   $nord6    $nord9     $nord10
+client.focused_inactive $nord3    $nord3    $nord4    $nord2     $nord3
+client.unfocused        $nord1    $nord1    $nord5    $nord1     $nord1
+client.urgent           $nord11   $nord11   $nord6    $nord11    $nord11
+client.placeholder      $nord0    $nord0    $nord4    $nord0     $nord0
+
+### Output configuration
+#
+# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
+#output * bg ~/Pictures/nordic.png fill
+output * bg ~/Pictures/nordic.png fill
+#
+# Example configuration:
+#
+#   output HDMI-A-1 resolution 1920x1080 position 1920,0
+#
+# You can get the names of your outputs by running: swaymsg -t get_outputs
+output "eDP-1" disable
+### Idle configuration
+#
+# Example configuration:
+# 
+exec swayidle -w \
+          timeout 350 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+          timeout 800 'loginctl suspend'
+#
+# This will lock your screen after 300 seconds of inactivity, then turn off
+# your displays after another 300 seconds, and turn your screens back on when
+# resumed. It will also lock your screen before your computer goes to sleep.
+
+### Input configuration
+#
+# Example configuration:
+#
+#   input type:touchpad {
+#       dwt enabled
+#       tap enabled
+#       natural_scroll enabled
+#       middle_emulation enabled
+#   }
+#
+   input type:keyboard {
+       xkb_layout "us,ru"
+       xkb_options "grp:alt_shift_toggle"
+}
+#
+# You can also configure each device individually.
+# Read `man 5 sway-input` for more information about this section.
+
+### Key bindings - ALL CONVERTED TO KEYCODES
+#
+# Basics:
+#
+    # Start a terminal - KEYCODE 36 = Enter key
+    bindcode $mod+36 exec $term
+
+    # Kill focused window - KEYCODE 24 = q
+    bindcode $mod+Shift+24 kill
+
+    # Start your launcher - KEYCODE 40 = d
+    bindcode $mod+40 exec $menu
+
+    # Drag floating windows by holding down $mod and left mouse button.
+    # Resize them with right mouse button + $mod.
+    # Despite the name, also works for non-floating windows.
+    # Change normal to inverse to use left mouse button for resizing and right
+    # mouse button for dragging.
+    floating_modifier $mod normal
+
+    # Reload the configuration file - KEYCODE 54 = c
+    bindcode $mod+Shift+54 reload
+
+    # Exit sway - KEYCODE 26 = e
+    bindcode $mod+Shift+26 exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+#
+# Moving around:
+#
+    # Move your focus around with home row keys
+    bindcode $mod+$left focus left    # KEYCODE 43 = h
+    bindcode $mod+$down focus down    # KEYCODE 44 = j
+    bindcode $mod+$up focus up        # KEYCODE 45 = k
+    bindcode $mod+$right focus right  # KEYCODE 46 = l
+    # Arrow keys (already keycodes)
+    bindcode $mod+111 focus left    # KEYCODE 111 = Left Arrow
+    bindcode $mod+116 focus down    # KEYCODE 116 = Down Arrow
+    bindcode $mod+113 focus up      # KEYCODE 113 = Up Arrow
+    bindcode $mod+114 focus right   # KEYCODE 114 = Right Arrow
+
+    # Move the focused window with the same, but add Shift
+    bindcode $mod+Shift+$left move left
+    bindcode $mod+Shift+$down move down
+    bindcode $mod+Shift+$up move up
+    bindcode $mod+Shift+$right move right
+    # Arrow keys with Shift
+    bindcode $mod+Shift+111 move left
+    bindcode $mod+Shift+116 move down
+    bindcode $mod+Shift+113 move up
+    bindcode $mod+Shift+114 move right
+#
+# Workspaces:
+#
+    # Switch to workspace (KEYCODES: 10=1, 11=2, 12=3, 13=4, 14=5, 15=6, 16=7, 17=8, 18=9, 19=0)
+    bindcode $mod+10 workspace number 1
+    bindcode $mod+11 workspace number 2
+    bindcode $mod+12 workspace number 3
+    bindcode $mod+13 workspace number 4
+    bindcode $mod+14 workspace number 5
+    bindcode $mod+15 workspace number 6
+    bindcode $mod+16 workspace number 7
+    bindcode $mod+17 workspace number 8
+    bindcode $mod+18 workspace number 9
+    bindcode $mod+19 workspace number 10
+    # Move focused container to workspace
+    bindcode $mod+Shift+10 move container to workspace number 1
+    bindcode $mod+Shift+11 move container to workspace number 2
+    bindcode $mod+Shift+12 move container to workspace number 3
+    bindcode $mod+Shift+13 move container to workspace number 4
+    bindcode $mod+Shift+14 move container to workspace number 5
+    bindcode $mod+Shift+15 move container to workspace number 6
+    bindcode $mod+Shift+16 move container to workspace number 7
+    bindcode $mod+Shift+17 move container to workspace number 8
+    bindcode $mod+Shift+18 move container to workspace number 9
+    bindcode $mod+Shift+19 move container to workspace number 10
+    # Note: workspaces can have any name you want, not just numbers.
+    # We just use 1-10 as the default.
+#
+# Layout stuff:
+#
+    # You can "split" the current object of your focus with
+    # $mod+b or $mod+v, for horizontal and vertical splits
+    # respectively. KEYCODE 56 = b, KEYCODE 55 = v
+    bindcode $mod+56 splith
+    bindcode $mod+55 splitv
+
+    # Switch the current container between different layout styles
+    # KEYCODE 39 = s, KEYCODE 25 = w, KEYCODE 26 = e
+    bindcode $mod+39 layout stacking
+    bindcode $mod+25 layout tabbed
+    bindcode $mod+26 layout toggle split
+
+    # Make the current focus fullscreen - KEYCODE 41 = f
+    bindcode $mod+41 fullscreen
+
+    # Toggle the current focus between tiling and floating mode - KEYCODE 65 = space
+    bindcode $mod+Shift+65 floating toggle
+
+    # Swap focus between the tiling area and the floating area - KEYCODE 65 = space
+    bindcode $mod+65 focus mode_toggle
+
+    # Move focus to the parent container - KEYCODE 38 = a
+    bindcode $mod+38 focus parent
+#
+# Scratchpad:
+#
+    # Sway has a "scratchpad", which is a bag of holding for windows.
+    # You can send windows there and get them back later.
+
+    # Move the currently focused window to the scratchpad - KEYCODE 20 = minus
+    bindcode $mod+Shift+20 move scratchpad
+
+    # Show the next scratchpad window or hide the focused scratchpad window.
+    # If there are multiple scratchpad windows, this command cycles through them.
+    bindcode $mod+20 scratchpad show
+#
+# Resizing containers:
+#
+mode "resize" {
+    # left will shrink the containers width
+    # right will grow the containers width
+    # up will shrink the containers height
+    # down will grow the containers height
+    bindcode $left resize shrink width 10px     # KEYCODE 43 = h
+    bindcode $down resize grow height 10px      # KEYCODE 44 = j
+    bindcode $up resize shrink height 10px      # KEYCODE 45 = k
+    bindcode $right resize grow width 10px      # KEYCODE 46 = l
+
+    # Ditto, with arrow keys
+    bindcode 111 resize shrink width 10px       # KEYCODE 111 = Left Arrow
+    bindcode 116 resize grow height 10px        # KEYCODE 116 = Down Arrow
+    bindcode 113 resize shrink height 10px      # KEYCODE 113 = Up Arrow
+    bindcode 114 resize grow width 10px         # KEYCODE 114 = Right Arrow
+
+    # Return to default mode - KEYCODE 36 = Enter, KEYCODE 9 = Escape
+    bindcode 36 mode "default"
+    bindcode 9 mode "default"
+}
+bindcode $mod+27 mode "resize"  # KEYCODE 27 = r
+bindcode $mod+Shift+33 exec grimshot copy area  # KEYCODE 33 = p
+# kill window on middle mouse
+bindsym --whole-window button2 kill
+
+# Start recording entire focused output (screen) - KEYCODE 27 = r
+bindcode $mod+Shift+27 exec ~/.config/wf-recorder/record-bg.sh
+# Stop recording - KEYCODE 28 = t
+bindcode $mod+Shift+28 exec pkill -INT wf-recorder
+
+#
+# Utilities:
+#
+    # Special keys to adjust volume via PulseAudio
+    bindsym --locked XF86AudioMute exec pactl set-sink-mute \@DEFAULT_SINK@ toggle
+    bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume \@DEFAULT_SINK@ -5%
+    bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume \@DEFAULT_SINK@ +5%
+    bindsym --locked XF86AudioMicMute exec pactl set-source-mute \@DEFAULT_SOURCE@ toggle
+    # Special keys to adjust brightness via brightnessctl
+    bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
+    bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+    # Special key to take a screenshot with grim
+    bindsym Print exec grim
+    bindsym --to-code $mod+m output DVI-D-1 toggle
+
+
+#
+# Status Bar:
+#
+# Read `man 5 sway-bar` for more information about this section.
+exec waybar
+for_window [app_id="firefox" title="^Picture-in-Picture$"] floating enable, sticky enable, border none
+for_window [title="Virtual Machine Manager"] floating enable
+for_window [title="File Operation Progress"] floating enable
+for_window [title="Media viewer"] floating enable
+for_window [class="vlc"] floating enable
+for_window [app_id="pavucontrol"] floating enable
+for_window [app_id="ristretto"] floating enable
+for_window [app_id="mpv"] floating enable
+for_window [app_id="blueman-manager"] floating enable
+for_window [app_id="blueman-sendto"] floating enable
+for_window [app_id="iwgtk"] floating enable
+include /etc/sway/config.d/*
+workspace 1 output DP-1
+output DP-1 pos 0 0
+workspace 2 output DVI-D-1
+exec wl-paste --type text --watch clipman store --histpath="~/.local/state/clipman-primary.json"
+exec openrc -U gui
+exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec wayvnc
+exec dbus-update-activation-environment WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP=sway SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME

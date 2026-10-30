@@ -1,0 +1,15 @@
+{
+  "Applications": {
+    "/home/andrew/.local/share/applications/waydroid.org.mozilla.firefox.desktop": 3,
+    "/home/andrew/.local/share/flatpak/exports/share/applications/com.valvesoftware.Steam.desktop": 1,
+    "/home/andrew/.local/share/flatpak/exports/share/applications/org.telegram.desktop.desktop": 11,
+    "/usr/share/applications/Alacritty.desktop": 5,
+    "/usr/share/applications/btop.desktop": 1,
+    "/usr/share/applications/firefox.desktop": 34,
+    "/usr/share/applications/geany.desktop": 32,
+    "/usr/share/applications/org.wireshark.Wireshark.desktop": 1,
+    "/usr/share/applications/thunar-settings.desktop": 3,
+    "/usr/share/applications/thunar.desktop": 9,
+    "/usr/share/applications/virt-manager.desktop": 2
+  }
+}
