@@ -22,15 +22,45 @@ end = [
 start = [ "launcher", "workspaces" ]
 
 [desktop_widgets]
+enabled = false
 schema_version = 2
-widget_order = []
+widget_order = [ "desktop-widget-0000000000000001", "desktop-widget-0000000000000002" ]
 
     [desktop_widgets.grid]
     cell_size = 16
     major_interval = 4
     visible = true
 
-    [desktop_widgets.widget]
+    [desktop_widgets.widget.desktop-widget-0000000000000001]
+    box_height = 112.0
+    box_width = 352.0
+    cx = 3152.0
+    cy = 168.0
+    output = "DP-1"
+    placement_height = 1440.0
+    placement_width = 3440.0
+    rotation = 0.0
+    type = "sysmon"
+
+        [desktop_widgets.widget.desktop-widget-0000000000000001.settings]
+        display = "graph"
+        stat = "cpu_usage"
+        stat2 = "ram_pct"
+
+    [desktop_widgets.widget.desktop-widget-0000000000000002]
+    box_height = 0.0
+    box_width = 0.0
+    cx = 3154.0
+    cy = 416.0
+    output = "DP-1"
+    placement_height = 1440.0
+    placement_width = 3440.0
+    rotation = 0.0
+    type = "fancy_audio_visualizer"
+
+        [desktop_widgets.widget.desktop-widget-0000000000000002.settings]
+        background = false
+        visualization_mode = "wave"
 
 [dock]
 auto_hide = true
@@ -147,6 +177,10 @@ path = "/home/andrew/Pictures/nordic.png"
 
 [wallpaper.monitors.DP-1]
 path = "/home/andrew/Pictures/nordic.png"
+
+[widget.sysmon]
+stat = "ram_used"
+visualization = "graph"
 
 [widget.workspaces]
 show_all_outputs = true

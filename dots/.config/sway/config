@@ -18,7 +18,7 @@ set $ipc noctalia msg
 
 ### Output configuration
 
-output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+exec_always swaybg -c '#2e3440'
 
 ### Idle configuration
 #

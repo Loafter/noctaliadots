@@ -134,15 +134,31 @@ pull() {
 # Push
 # ==========================================
 
+
 push() {
     require_git
     check_repo
 
-    git -C "$REPO" push ||
-        die "Push failed"
+    BRANCH=$(git -C "$REPO" branch --show-current)
+
+    if [ -z "$BRANCH" ]; then
+        die "Cannot determine current branch"
+    fi
+
+    UPSTREAM=$(git -C "$REPO" rev-parse --abbrev-ref \
+        --symbolic-full-name '@{u}' 2>/dev/null || true)
+
+    if [ -z "$UPSTREAM" ]; then
+        git -C "$REPO" push -u origin "$BRANCH" ||
+            die "Initial push failed"
+    else
+        git -C "$REPO" push ||
+            die "Push failed"
+    fi
 
     echo "Push completed."
 }
+
 
 # ==========================================
 # Backup
