@@ -7,6 +7,7 @@ end = [
     "sysmon",
     "network_rx",
     "network_tx",
+    "network",
     "tray",
     "notifications",
     "clipboard",
@@ -87,7 +88,12 @@ auto_locate = true
 [lockscreen_widgets]
 enabled = false
 schema_version = 2
-widget_order = [ "lockscreen-login-box@WL-1", "lockscreen-login-box@DP-1" ]
+widget_order = [
+    "lockscreen-login-box@WL-1",
+    "lockscreen-login-box@DP-1",
+    "lockscreen-login-box@DP-4",
+    "lockscreen-login-box@eDP-1"
+]
 
     [lockscreen_widgets.grid]
     cell_size = 16
@@ -106,6 +112,34 @@ widget_order = [ "lockscreen-login-box@WL-1", "lockscreen-login-box@DP-1" ]
     type = "login_box"
 
         [lockscreen_widgets.widget."lockscreen-login-box@DP-1".settings]
+        background_color = "surface_container"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_password_reveal = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@DP-4"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 1280.0
+    cy = 1258.0
+    output = "DP-4"
+    placement_height = 1440.0
+    placement_width = 2560.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@DP-4".settings]
         background_color = "surface_container"
         background_opacity = 0.88
         background_radius = 12.0
@@ -150,6 +184,34 @@ widget_order = [ "lockscreen-login-box@WL-1", "lockscreen-login-box@DP-1" ]
         show_unlock_hint = true
         show_weather = true
 
+    [lockscreen_widgets.widget."lockscreen-login-box@eDP-1"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 960.0
+    cy = 898.0
+    output = "eDP-1"
+    placement_height = 1080.0
+    placement_width = 1920.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@eDP-1".settings]
+        background_color = "surface_container"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_password_reveal = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
 [plugins]
 enabled = []
 
@@ -160,6 +222,7 @@ polkit_agent = true
 settings_show_advanced = false
 
     [shell.panel]
+    launcher_placement = "attached"
     launcher_position = "top_left"
 
 [theme]
@@ -180,7 +243,6 @@ path = "/home/andrew/Pictures/nordic.png"
 
 [widget.sysmon]
 stat = "ram_used"
-visualization = "graph"
 
 [widget.workspaces]
 show_all_outputs = true

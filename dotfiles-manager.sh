@@ -6,7 +6,8 @@
 # POSIX SH compatible
 # ==========================================
 
-REPO="${DOTS_REPO:-$HOME/dotfiles}"
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+REPO="${DOTS_REPO:-$SCRIPT_DIR}"
 DOTS="$REPO/dots"
 SCRIPT="$REPO/dotfiles-manager.sh"
 
@@ -20,15 +21,18 @@ die() {
 }
 
 require_git() {
-    command -v git >/dev/null 2>&1 || die "Git is not installed"
+    command -v git >/dev/null 2>&1 ||
+        die "Git is not installed"
 }
 
 require_rsync() {
-    command -v rsync >/dev/null 2>&1 || die "rsync is not installed"
+    command -v rsync >/dev/null 2>&1 ||
+        die "rsync is not installed"
 }
 
 check_repo() {
-    [ -d "$REPO/.git" ] || die "Repository not initialized. Run init first."
+    [ -d "$REPO/.git" ] ||
+        die "Repository not initialized: $REPO"
 }
 
 # ==========================================
@@ -38,34 +42,29 @@ check_repo() {
 init() {
     require_git
 
-    mkdir -p "$REPO" "$DOTS" || die "Cannot create repository"
+    mkdir -p "$REPO" "$DOTS" ||
+        die "Cannot create repository"
 
     if [ ! -d "$REPO/.git" ]; then
-        git -C "$REPO" init || die "Git init failed"
-        git -C "$REPO" branch -M main || die "Cannot create main branch"
-    fi
+        git -C "$REPO" init ||
+            die "Git init failed"
 
-    # Copy manager script into repository
-    if [ -f "$0" ]; then
-        case "$(cd "$(dirname "$0")" && pwd)/$(basename "$0")" in
-            "$SCRIPT") ;;
-            *)
-                cp "$0" "$SCRIPT" || die "Cannot copy manager script"
-                chmod +x "$SCRIPT"
-                ;;
-        esac
+        git -C "$REPO" branch -M main ||
+            die "Cannot create main branch"
     fi
 
     echo "Repository initialized: $REPO"
 }
 
 # ==========================================
-# Synchronize configurations
+# Synchronize configurations INTO repository
 # ==========================================
 
 sync() {
     require_rsync
-    mkdir -p "$DOTS" || die "Cannot create dots directory"
+
+    mkdir -p "$DOTS" ||
+        die "Cannot create dots directory"
 
     sync_dir "$HOME/.config/noctalia" "$DOTS/.config/noctalia"
     sync_dir "$HOME/.local/share/noctalia" "$DOTS/.local/share/noctalia"
@@ -80,11 +79,12 @@ sync_dir() {
     DST="$2"
 
     if [ -d "$SRC" ]; then
-        mkdir -p "$DST" || die "Cannot create $DST"
+        mkdir -p "$DST" ||
+            die "Cannot create $DST"
 
-        echo "Syncing: $SRC"
+        echo "Syncing: $SRC -> $DST"
 
-        rsync -a --delete "$SRC/" "$DST/" ||
+        rsync -av "$SRC/" "$DST/" ||
             die "Sync failed: $SRC"
     else
         echo "Skipping missing directory: $SRC"
@@ -97,6 +97,7 @@ sync_dir() {
 
 commit() {
     require_git
+
     init
     sync
 
@@ -134,16 +135,14 @@ pull() {
 # Push
 # ==========================================
 
-
 push() {
     require_git
     check_repo
 
     BRANCH=$(git -C "$REPO" branch --show-current)
 
-    if [ -z "$BRANCH" ]; then
+    [ -n "$BRANCH" ] ||
         die "Cannot determine current branch"
-    fi
 
     UPSTREAM=$(git -C "$REPO" rev-parse --abbrev-ref \
         --symbolic-full-name '@{u}' 2>/dev/null || true)
@@ -158,7 +157,6 @@ push() {
 
     echo "Push completed."
 }
-
 
 # ==========================================
 # Backup
@@ -181,21 +179,46 @@ status() {
 }
 
 # ==========================================
-# Restore
+# Restore configurations FROM repository
 # ==========================================
 
 restore() {
     require_rsync
-    check_repo
 
-    echo "Restoring Noctalia and Sway configurations..."
+    echo "=========================================="
+    echo "Restoring Noctalia and Sway configurations"
+    echo "=========================================="
 
-    sync_dir "$DOTS/.config/noctalia" "$HOME/.config/noctalia"
-    sync_dir "$DOTS/.local/share/noctalia" "$HOME/.local/share/noctalia"
-    sync_dir "$DOTS/.local/state/noctalia" "$HOME/.local/state/noctalia"
-    sync_dir "$DOTS/.config/sway" "$HOME/.config/sway"
+    echo "Repository: $REPO"
+    echo "Backup source: $DOTS"
+    echo ""
+    echo "Existing unrelated files will NOT be deleted."
+    echo ""
 
+    restore_dir "$DOTS/.config/noctalia" "$HOME/.config/noctalia"
+    restore_dir "$DOTS/.local/share/noctalia" "$HOME/.local/share/noctalia"
+    restore_dir "$DOTS/.local/state/noctalia" "$HOME/.local/state/noctalia"
+    restore_dir "$DOTS/.config/sway" "$HOME/.config/sway"
+
+    echo ""
     echo "Restore completed."
+}
+
+restore_dir() {
+    SRC="$1"
+    DST="$2"
+
+    if [ -d "$SRC" ]; then
+        mkdir -p "$DST" ||
+            die "Cannot create $DST"
+
+        echo "Restoring: $SRC -> $DST"
+
+        rsync -av "$SRC/" "$DST/" ||
+            die "Restore failed: $SRC"
+    else
+        echo "Skipping missing backup directory: $SRC"
+    fi
 }
 
 # ==========================================
@@ -224,16 +247,17 @@ help() {
 Noctalia + Sway Dotfiles Manager
 
 Repository: $REPO
+Backup:     $DOTS
 
 Commands:
 
   init              Initialize Git repository
-  sync              Sync configurations
+  sync              Copy configurations into repository
   commit [message]  Sync and commit
   pull              Pull remote changes
   push              Push commits
   backup [message]  Sync, commit and push
-  restore           Restore configurations
+  restore           Restore without deleting files
   status            Show Git status
   remote [URL]      Show or add Git remote
   help              Show help

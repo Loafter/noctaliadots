@@ -242,7 +242,8 @@ for_window [app_id="mpv"] floating enable
 for_window [app_id="blueman-manager"] floating enable
 for_window [app_id="blueman-sendto"] floating enable
 for_window [app_id="iwgtk"] floating enable
-
+exec swaymsg "output eDP-1 disable"
+bindsym $mod+m output "eDP-1" toggle
 #for_window [app_id=".*"] floating enable
 #for_window [class=".*"] floating enable
 
